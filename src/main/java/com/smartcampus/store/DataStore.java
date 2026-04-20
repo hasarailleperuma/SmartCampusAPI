@@ -12,12 +12,13 @@ import java.util.Map;
 public class DataStore {
     private static final DataStore INSTANCE = new DataStore();
 
+    // Utilizing LinkedHashMap to preserve insertion order and synchronizedMap for thread-safety.
     private final Map<String, Room> rooms = Collections.synchronizedMap(new LinkedHashMap<>());
     private final Map<String, Sensor> sensors = Collections.synchronizedMap(new LinkedHashMap<>());
     private final Map<String, List<SensorReading>> readings = Collections.synchronizedMap(new LinkedHashMap<>());
 
     private DataStore() {
-        // singleton
+        // Private constructor for Singleton pattern
     }
 
     public static DataStore getInstance() {
