@@ -4,6 +4,7 @@ import com.smartcampus.model.Room;
 import com.smartcampus.store.DataStore;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -43,5 +44,19 @@ public class RoomResource {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
         return Response.ok(room).build();
+    }
+
+    @DELETE
+    @Path("/{roomId}")
+    public Response deleteRoom(@PathParam("roomId") String roomId) {
+        Room room = dataStore.getRooms().get(roomId);
+        if (room == null) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+        if (room.getSensorIds() != null && !room.getSensorIds().isEmpty()) {
+            throw new com.smartcampus.exception.RoomNotEmptyException("Room cannot be deleted as it contains sensors");
+        }
+        dataStore.getRooms().remove(roomId);
+        return Response.ok().build();
     }
 }
